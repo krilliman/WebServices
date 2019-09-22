@@ -1,0 +1,16 @@
+1. /api/arts [GET]                          //done
+2. /api/arts/:id [GET]                      //done
+3. /api/arts [POST]                         //done
+4. /api/artists [GET]                       //done
+5. /api/artists/:id [GET]                   //done
+6. /api/artists [POST]                      //done
+7. /api/customers [GET]                     //done
+8. /api/customers/:id [GET]                 //done
+9. /api/customers [POST]                    //done
+10. /api/customers/:id/auction-bids [GET]
+11. /api/auctions [GET]                     //done
+12. /api/auctions/:id [GET]                 //done
+13. /api/auctions/:id/winner [GET] 
+14. /api/auctions [POST]
+15. /api/auctions/:id/bids [GET] 
+16. /api/auctions/:id/bids [POST]
