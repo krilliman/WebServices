@@ -8,7 +8,7 @@ const customerSchema = require('../schemas/customer');
 
 
 
-const connection = mongoose.createConnection("mongodb+srv://ManisonAdmin:123qwe@mansiondesubastar-ajcfr.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true });
+const connection = mongoose.createConnection("mongodb+srv://ManisonAdmin:123qwe@mansiondesubastar-ajcfr.mongodb.net/mansion_de_subastas", { useNewUrlParser: true, useUnifiedTopology: true });
 
 module.exports = {
     Art: connection.model('Art', artSchema),

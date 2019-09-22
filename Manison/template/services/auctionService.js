@@ -1,9 +1,20 @@
+const auctionDB = require('../data/db').Auction;
+const auctionBidDB = require('../data/db').AuctionBid;
+
 const auctionService = () => {
     const getAllAuctions = (cb, errorCb) => {
+        auctionDB.find({}, function(err, auctions){
+            if(err){throw new Error(err);}
+            cb(auctions);
+        });
         // Your implementation goes here
     };
 
     const getAuctionById = (id, cb, errorCb) => {
+        auctionDB.findById(id, function(err, auction){
+            if(err){throw new Error(err);}
+            cb(auction);
+        });
         // Your implementation goes here
     };
 
