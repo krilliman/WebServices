@@ -1,0 +1,1 @@
+mongodb+srv://<username>:<password>@mansiondesubastar-ajcfr.mongodb.net/test?retryWrites=true&w=majority
