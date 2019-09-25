@@ -91,6 +91,13 @@ app.get('/api/auctions/:id', function(req, res){
         return res.json(auction);
     });
 });
+app.post('/api/auctions', function(req, res){
+    auctionService.createAuction(req.body, function(auction){
+        return res.status(200).json(auction);
+    }, function(err){
+        return res.status(400).json(err);
+    });
+});
 
 
 /********************Auctions***************************/
