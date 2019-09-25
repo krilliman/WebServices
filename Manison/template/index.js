@@ -91,6 +91,17 @@ app.get('/api/auctions/:id', function(req, res){
         return res.json(auction);
     });
 });
+app.post('/api/auctions', async function(req, res){
+    const auction = await auctionService.createAuctionAsync(req.body);
+    if(auction instanceof Error){
+        res.status(400).json(auction);
+    }
+    else{
+        res.status(200).json(auction);
+    }
+}); 
+
+/*
 app.post('/api/auctions', function(req, res){
     auctionService.createAuction(req.body, function(auction){
         return res.status(200).json(auction);
@@ -98,7 +109,7 @@ app.post('/api/auctions', function(req, res){
         return res.status(400).json(err);
     });
 });
-
+*/
 
 /********************Auctions***************************/
 

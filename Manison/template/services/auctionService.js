@@ -30,15 +30,16 @@ const auctionService = () => {
         // Your implementation goes here
     };
 
-    /*
-    breyta öllu í acync await 
-    ná síðan í artið sem er með áhveðið id og tekka hvort það sé action item
-    const createAuctionAsync = async () =>{
+    
+    //breyta öllu í acync await 
+    //ná síðan í artið sem er með áhveðið id og tekka hvort það sé action item
+    const createAuctionAsync = async newAuction =>{
         return await globalTryCatch(async () =>{
-            const 
+            const auction = await auctionDB.create(newAuction);
+            return auction;
         })
     }
-    */
+    
 	const createAuction = (auction, successCb, errorCb) => {
         // Your implementation goes here
         auctionDB.create(auction, function(err, result){
@@ -59,7 +60,8 @@ const auctionService = () => {
         getAllAuctions,
         getAuctionById,
         getAuctionWinner,
-		createAuction,
+        createAuction,
+        createAuctionAsync,
 		getAuctionBidsWithinAuction,
 		placeNewBid
     };
