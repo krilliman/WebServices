@@ -1,29 +1,30 @@
 const artistConnection = require('../data/db').Artist;
 
 const artistService = () => {
-    const getAllArtists = (cb, errorCb) => {
-        artistConnection.find({}, function(err, artists){
-            if(err){throw new Error(errorCb);}
-            cb(artists);
-        })
-    };
-
-    const getArtistById = (id, cb, errorCb) => {
-        // Your implementation goes here
-        artistConnection.findById(id, function(err, artist){
-            if(err){throw new Error(errorCb);}
-            cb(artist);
-        });
-    };
-
-    const createArtist = (artist, successCb, errorCb) => {
-        // Your implementation goes here
-        artistConnection.create(artist, function(err, result){
-            if(err){errorCb(err);}
-            else { successCb(result); }
-        });
-    };
-
+    const getAllArtists = async errCb =>{
+        try{
+            return await artistConnection.find({});
+        }
+        catch(err){
+            errCb(err);
+        }
+    }
+    const getArtistById = async (id , errCb) =>{
+        try{
+            return await artistConnection.findById(id);
+        }
+        catch(err){
+            errCb(err);
+        }
+    }
+    const createArtist = async (artist, errCb) =>{
+        try{
+            return await artistConnection.create(artist);
+        }
+        catch(err){
+            errCb(err);
+        }
+    }
     return {
         getAllArtists,
         getArtistById,

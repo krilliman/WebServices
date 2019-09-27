@@ -7,10 +7,45 @@
 7. /api/customers [GET]                     //done
 8. /api/customers/:id [GET]                 //done
 9. /api/customers [POST]                    //done
-10. /api/customers/:id/auction-bids [GET]
+10. /api/customers/:id/auction-bids [GET]   //done
 11. /api/auctions [GET]                     //done
 12. /api/auctions/:id [GET]                 //done
-13. /api/auctions/:id/winner [GET] 
-14. /api/auctions [POST]
-15. /api/auctions/:id/bids [GET] 
-16. /api/auctions/:id/bids [POST]
+13. /api/auctions/:id/winner [GET]          //done
+14. /api/auctions [POST]                    //done
+15. /api/auctions/:id/bids [GET]            //done
+16. /api/auctions/:id/bids [POST]           //done
+
+
+change in all services that it only talks to the tables its exposed to
+
+artService: art                             //done
+artistService: artists                      //done
+auctionService: auctions, auctionBids       //done
+customerService: customers                  //done
+
+
+change all functions to async - await
+    customer                                //done
+    art                                     //done -> add maybe a check if the artistId a valid artist
+    artist                                  //done
+    auction                                 //done
+
+
+test all routes with edge cases
+
+1.[test if all getAllArt works]                                                                         - [OK]
+2.[test if getArt with good id works, test with wrong id gives a descriptive error]                     - [OK, OK]
+3.[test if createArt works, test if unvalid model gives error]                                          - [OK, OK]
+4.[test if all getAllArtist works]                                                                      - [OK]
+5.[test if getArtist with good id works, test with wrong id gives a descriptive error]                  - [OK, OK]
+6.[test if createArtist works, test if unvalid model gives error]                                       - [OK, OK]
+7.[test if all getAllCustomers works]                                                                   - [OK]
+8.[test if getCustomer with good id works, test with wrong id gives a descriptive error]                - [OK, OK]
+9.[test if createCustomer works, test if unvalid model gives error]                                     - [OK, OK]
+10.[test with good id, bad id]                                                                          - [OK, OK]
+11.[test if get all works]                                                                              - [OK]
+12.[test with good id, bad id]                                                                          - [OK, OK]
+13.[test a auction that is not finished(409), test auction with a winner, test a auction with no bids] - [OK, OK, OK]
+14.[create with all valid, test with unvalid artId, test with valid artId but not an aution item(412), test with an ongoing auction on item]        - [OK, OK ,OK]
+15.[test with valid id, unvalid id]                                                                     -   [OK, OK]
+16.[test with all valid, test with lower then min(412), test with lower the highest(412), test with auction that is finished(403), test with a bad id] // need to update the auciton schema to winner = this winner. [OK , OK, OK, OK]

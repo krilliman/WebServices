@@ -1,32 +1,45 @@
 const artDb = require('../data/db').Art;
 
 const artService = () => {
-    const getAllArts = (cb, errorCb) => {
-        // Your implementation goes here
-        artDb.find({}, function(err, artists){
-            if(err){throw new Error(errorCb);}
-            cb(artists);
-        });
-    };
 
-    const getArtById = (id, cb, errorCb) => {
-        artDb.findById(id, function(err, art){
-            if(err){throw new Error(errorCb);}
-            cb(art);
-        });
-    };
+    const getAllArts = async errCb =>{
+        try{
+            return await artDb.find({});
+        }
+        catch(err){
+            errCb(err);
+        }
+    }
+    const getArtByIdAsync = async id =>{
+        try{     
+            return await artDb.findById(id);
+        }catch(err){
+            return err;
+        }
+    }
 
-    const createArt = (art, successCb, errorCb) => {
-        artDb.create(art, function(err, result){
-            if(err){errorCb(err);}
-            else{successCb(result);}
-        });
-    };
+    const getArtById = async (id, errCb) =>{
+        try{
+            return await artDb.findById(id);
+        }
+        catch(err){
+            errCb(err);
+        }
+    }
 
+    const createArt = async (art, errCb) =>{
+        try{
+            return await artDb.create(art);
+        }
+        catch(err){
+            errCb(err);
+        }
+    }
     return {
         getAllArts,
         getArtById,
-        createArt
+        createArt,
+        getArtByIdAsync
     };
 };
 

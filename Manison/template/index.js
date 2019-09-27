@@ -10,108 +10,124 @@ const app = express();
 app.use(bodyParser.json());
 
 
-
-
-
 /********************Art***************************/
-app.get('/api/arts', function(req, res){
-    artService.getAllArts(function(artists){
-        return res.json(artists);
-    })
-})
-app.get('/api/arts/:id', function(req, res){
-    const id = req.params.id;
-    artService.getArtById(id, function(art){
-        return res.json(art);
-    });
-});
-app.post('/api/arts', function(req, res){
-    artService.createArt(req.body, function(art){
-        return res.status(201).json(art);
-    },function(err){
+app.get('/api/arts', async function(req, res){
+    const arts = await artService.getAllArts(err =>{
         return res.status(400).json(err);
     });
-})
+    return res.status(200).json(arts);
+});
 
-/********************Art***************************/
+app.get('/api/arts/:id', async function(req, res){
+    const art = await artService.getArtById(req.params.id, err=>{
+        return res.status(400).json(err);
+    });
+    if(art == null){
+        return res.status(404).send("No item with the given id found");
+    }
+    return res.status(200).json(art);
+});
+
+app.post('/api/arts', async function(req, res){
+    const art = await artService.createArt(req.body, err=>{
+        return res.status(400).json(err);
+    });
+    return res.status(201).json(art);
+});
 
 /********************Artist***************************/
-app.get('/api/artists', function(req, res){
-    artistService.getAllArtists(function(artists){
-        return res.json(artists);
-    });
-});
 
-app.get('/api/artists/:id', function(req, res){
-    const id = req.params.id;
-    artistService.getArtistById(id, function(artist){
-        return res.json(artist);
-    });
-});
-app.post('/api/artists', function(req, res){
-    artistService.createArtist(req.body, function(artist){
-        return res.status(201).json(artist);
-    }, function(err){
+app.get('/api/artists', async function(req, res){
+    const artists = await artistService.getAllArtists(err =>{
+        return res.status(400).json(err);
+    })
+    return res.status(200).json(artists);
+})
+
+app.get('/api/artists/:id', async function(req, res){
+    const artist = await artistService.getArtistById(req.params.id, err=>{
         return res.status(400).json(err);
     });
-});
-/**********************Artist*************************/
+    if(artist == null){
+        return res.status(404).send("No item with the given id found");
+    }
+    return res.status(200).json(artist);
+})
+
+app.post('/api/artists', async function(req, res){
+    const artist = await artistService.createArtist(req.body, err => {
+        return res.status(400).json(err);
+    })
+    return res.status(201).json(artist);
+})
 
 /********************Customer***************************/
-app.get('/api/customers', function(req, res){
-    customerService.getAllCustomers(function(customers){
-        return res.json(customers);
-    });
-});
-
-app.get('/api/customers/:id', function(req, res){
-    const id = req.params.id;
-    customerService.getCustomerById(id, function(customer){
-        return res.json(customer);
-    });
-});
-app.post('/api/customers', function(req, res){
-    customerService.createCustomer(req.body, function(customer){
-        return res.status(201).json(customer);
-    }, function(err){
+app.get('/api/customers', async function(req, res){
+    const customers = await customerService.getAllCustomers(err=>{
         return res.status(400).json(err);
     });
+    return res.status(200).json(customers);
+})
+app.get('/api/customers/:id', async function(req, res){
+    console.log("test inc");
+    console.log(customerService);
+    const customer = await customerService.getCustomerById(req.params.id, err => {
+        return res.status(400).json(err);
+    })
+    if(customer == null){
+        return res.status(404).send("No item with the given id found");
+    }
+    return res.status(200).json(customer);
 });
-/********************Customer***************************/
+
+app.post('/api/customers', async function(req, res){
+    return customerService.createCustomer(req.body, res);
+});
+
+app.get('/api/customers/:id/auction-bids', async function(req, res){
+    return await customerService.getCustomerAuctionBids(req.params.id, res);
+});
 
 /********************Auctions***************************/
-app.get('/api/auctions', function(req, res){
-    auctionService.getAllAuctions(function(auctions){
-        return res.json(auctions);
-    });
-});
-app.get('/api/auctions/:id', function(req, res){
-    const id = req.params.id;
-    auctionService.getAuctionById(id, function(auction){
-        return res.json(auction);
-    });
-});
+app.get('/api/auctions', async function(req, res){
+    const auctions = await auctionService.getAllAuctions(err => {
+        return res.status(400).json(err);
+    })
+    return res.status(200).json(auctions);
+})
+
+app.get('/api/auctions/:id', async function(req, res){
+    const auction = await auctionService.getAuctionById(req.params.id, err => {
+        return res.status(400).json(err);
+    })
+    if(auction == null){
+        return res.status(404).send("No item with the given id found");
+    }
+    return res.status(200).json(auction);
+})
+
+app.get('/api/auctions/:id/winner', async function(req, res){
+    try{
+        return await auctionService.getAuctionWinner(req.params.id, res);
+    }
+    catch(err){
+        console.log(err);
+        return res.status(400).json(err);
+    }
+})
+
 app.post('/api/auctions', async function(req, res){
-    const auction = await auctionService.createAuctionAsync(req.body);
-    if(auction instanceof Error){
-        res.status(400).json(auction);
-    }
-    else{
-        res.status(200).json(auction);
-    }
+    return await auctionService.createAuction(req.body, res);
 }); 
 
-/*
-app.post('/api/auctions', function(req, res){
-    auctionService.createAuction(req.body, function(auction){
-        return res.status(200).json(auction);
-    }, function(err){
-        return res.status(400).json(err);
-    });
-});
-*/
+app.get('/api/auctions/:id/bids', async function(req, res){
+    return await auctionService.getAuctionBidsWithinAuction(req.params.id, res)
+})
 
-/********************Auctions***************************/
+app.post('/api/auctions/:id/bids', async function(req, res){
+    return await auctionService.placeNewBid(req.params.id, req.body, res);
+})
+
 
 // http://localhost:3000
 app.listen(3000, function() {
