@@ -6,7 +6,11 @@ const offerService = require('./Services/offersService')
 const pinatasService = require('./Services/pinatasService')
 app.use(bodyParser.json());
 
-
+/**
+ * In this project i used async await as we would do if we were working with a database 
+ * but since all the data is in memory we can just access it directly.
+ * but i thought it maked more sence to have it async / await like would be done in practice.
+ */
 app.get('/api/candies', async (req, res) =>{
     try{
         const candies = await candiesService.getAllCandies( err =>{
@@ -21,9 +25,7 @@ app.get('/api/candies', async (req, res) =>{
 
 app.post('/api/candies', async(req, res) =>{
     try{
-        console.log(req.body)
         const newCandy = await candiesService.createCandy(req.body, err=>{
-            console.log(err)
             return res.status(400).send(err);
         })
         return res.status(200).json(newCandy);
@@ -38,6 +40,9 @@ app.get('/api/candies/:id', async(req, res) =>{
         const candy = await candiesService.getCandyById(req.params.id,err =>{
             return res.status(400).json(err);
         })
+        if(candy == undefined){
+            return res.status(404).json("Candy with the given id was not found");
+        }
         return res.status(200).json(candy);
     }
     catch(err){
@@ -49,13 +54,11 @@ app.get('/api/candies/:id', async(req, res) =>{
 app.get('/api/offers', async(req, res) =>{
     try{
         const offers = await offerService.getOffers(err =>{
-            console.log(err)
             return res.status(400).send(err);
         })
         return res.status(200).json(offers);
     }
     catch(err){
-        console.log(err)
         return res.status(400).send(err);
     }
 })
@@ -63,13 +66,11 @@ app.get('/api/offers', async(req, res) =>{
 app.get('/api/pinatas', async(req, res) =>{
     try{
         const pinatas = await pinatasService.getPinatas(err =>{
-            console.log(err);
             return res.status(400).send(err);
         });
         return res.status(200).json(pinatas);
     }
     catch(err){
-        console.log(err);
         return res.status(400).send(err);
     };
 })
@@ -79,6 +80,9 @@ app.get('/api/pinatas/:id', async(req, res) =>{
         const pinata = await pinatasService.getPinataById(req.params.id, err =>{
             return res.status(400).send(err)
         })
+        if(pinata == undefined){
+            return res.status(404).json("Pinata with the given ID was not found");
+        }
         return res.status(200).json(pinata);
     }
     catch (err){
@@ -97,7 +101,7 @@ app.post('/api/pinatas', async(req, res) =>{
     }
 })
 
-app.get('/api/pinatas/:id/hit', async(req, res) =>{
+app.patch('/api/pinatas/:id/hit', async(req, res) =>{
     try{
         return await pinatasService.hitPinataById(req.params.id, res);
     }

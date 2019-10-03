@@ -1,11 +1,14 @@
 const db = require('../Data/db')
 const fs = require('fs');
-const surpriseFile = fs.createWriteStream('surprise.txt');
 const request = require('request');
-
-
+const imageFolder = './Images';
+const surpriseFile = fs.createWriteStream('surprise.txt');
+if (!fs.existsSync(imageFolder)){
+    fs.mkdirSync(imageFolder);
+}
+    
 const pinatasService = () =>{
-    const getPinatas = async errCb =>{
+    const getPinatas = async (errCb) =>{
         try{
             return await db.pinatas.filter(x => delete x.surprise);
         }
@@ -17,7 +20,7 @@ const pinatasService = () =>{
 
     const getPinataById = async (pId, errCb) =>{
         try{
-            return await db.pinatas.filter(x => x.id == pId).filter( x => delete x.surprise);
+            return await db.pinatas.filter(x => x.id == pId).filter( x => delete x.surprise)[0];
         }
         catch(err){
             errCb(err);
@@ -27,9 +30,8 @@ const pinatasService = () =>{
 
     const createPinata = async (model, errCb) => {
         try{
-            console.log(model)
             const newModel = {id: db.pinatas.length + 1, name: model.name, surprise: model.surprise, maximumHits: model.maximumHits}
-            db.pinatas.push(newModel);
+            await db.pinatas.push(newModel);
             return newModel
         }
         catch(err){
@@ -40,7 +42,7 @@ const pinatasService = () =>{
 
     const hitPinataById = async (pId, res) => {
         try{
-            const item = db.pinatas.filter(x => x.id == pId)[0];
+            const item = await db.pinatas.filter(x => x.id == pId)[0];
             if(item.maximumHits == 0){
                 return res.status(423).json("This item is locked")
             }
@@ -51,15 +53,14 @@ const pinatasService = () =>{
                 }
                 else{
                     var split = item.surprise.split('.')
-                    request.get(item.surprise).pipe(fs.createWriteStream(item.name + '.' + split[split.length -1]))
+                    request.get(item.surprise).pipe(fs.createWriteStream(imageFolder + '/' + item.name + '.' + split[split.length -1]))
                 }
                 return res.status(200).json(item.surprise);
             }
-            return res.status(204).json("Nice hit");
+            return res.status(204).json();
 
         }
         catch(err){
-            console.log(err)
             return res.status(400).send(err)
         }
 
