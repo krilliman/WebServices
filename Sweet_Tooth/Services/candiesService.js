@@ -1,16 +1,33 @@
 const db = require("../Data/db")
 
 const candiesService = () =>{
-    const getAllCandies = async  errCb=>{
-
+    const getAllCandies = async errCb=>{
+        try{
+            return await db.candies;
+        }
+        catch(err){
+            errCb(err);
+        }
     };
 
     const createCandy = async (model, errCb) =>{
-
+        try{
+            const newModel = {id: db.candies.length + 1, name: model.name, description: model.description}
+            db.candies.push(newModel)
+            return newModel;
+        }
+        catch(err){
+            errCb(err)
+        }
     };
 
     const getCandyById = async (cId, errCb) =>{
-
+        try{
+            return await db.candies.filter(element => element.id == cId);
+        }
+        catch(err){
+            errCb(err);
+        }
     };
 
     return {
